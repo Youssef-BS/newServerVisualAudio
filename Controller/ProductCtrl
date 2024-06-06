@@ -9,6 +9,7 @@ const Newsroom = require('../Models/Newsroom');
 const FeaturedProduct = require('../Models/FeaturedProduct');
 const multer = require('multer');
 const path = require('path');
+const { message } = require('antd');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -194,10 +195,20 @@ const getAllMarkets = asyncHandler(async (req, res) => {
   });
 
   const getCategories = asyncHandler(async (req, res) => {
-    const categories = await Category.findAll();
-    res.json(categories);
-  });
-
+    try {
+        const categories = await Category.findAll({
+            include: [
+                {
+                    model: Market,
+                    attributes: ['id', 'name', 'image'] 
+                }
+            ]
+        });
+        res.json(categories);
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
   const createSubcategory = asyncHandler(async (req, res) => {
     try {
@@ -211,9 +222,23 @@ const getAllMarkets = asyncHandler(async (req, res) => {
 
   
   const getSubcategories = asyncHandler(async (req, res) => {
-    const subcategories = await Subcategory.findAll();
-    res.json(subcategories);
+    try {
+    const subcategories = await Subcategory.findAll({
+      include : [
+        {
+          model: Category ,
+          attributes: [ 'id' , 'name' ] 
+        }
+      ]
+    });
+   
+    res.status(200).json(subcategories);
+  }catch(e) {
+    res.status(500).json({message : e.message})
+  }
   });
+
+
 
   const createSubSubcategory = asyncHandler(async (req, res) => {
     try {
