@@ -249,10 +249,23 @@ const getAllMarkets = asyncHandler(async (req, res) => {
       res.status(400).json({ success: false, error: error.message });
     }
   });
+
   
   const getSubSubcategories = asyncHandler(async (req, res) => {
-    const subsubcategories = await SubSubcategory.findAll();
-    res.json(subsubcategories);
+    try {
+      const subsubcategories = await SubSubcategory.findAll({
+        include: [
+          {
+            model: Subcategory, 
+            attributes: ['id', 'name']
+          }
+        ]
+      });
+      
+      res.status(200).json(subsubcategories);
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
   });
 
 

@@ -1,4 +1,3 @@
-// models/Subcategory.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config');
 const Subcategory = require('./Subcategory');
@@ -8,7 +7,6 @@ const SubSubcategory = sequelize.define('SubSubcategory', {
     type: DataTypes.STRING,
     allowNull: false
   },
-
   subcategoryId: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -17,8 +15,6 @@ const SubSubcategory = sequelize.define('SubSubcategory', {
       key: 'id' 
     }
   }
-
 });
-
 
 module.exports = SubSubcategory;

@@ -37,12 +37,10 @@ sequelize.authenticate()
     console.log('Database connection has been established successfully.');
     Category.belongsTo(Market);
     Market.hasMany(Category)
-
     Subcategory.belongsTo(Category);
     Category.hasMany(Subcategory)
     SubSubcategory.belongsTo(Subcategory)
     Subcategory.hasMany(SubSubcategory)
-
     Product.belongsTo(Category);
     Product.belongsTo(Subcategory);
     Product.belongsTo(SubSubcategory);

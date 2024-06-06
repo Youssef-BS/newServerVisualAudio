@@ -17,8 +17,6 @@ const {getMarketAndCategories} = require('../Controller/ProductCtrl');
 const router = express.Router();
 
 
-// Get all products from a specific market
-
 router.get('/products',getProducts)
 router.get('/all',getAllMarkets)
 router.post('/createMarke', createMarkets)
