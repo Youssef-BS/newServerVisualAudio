@@ -1,4 +1,3 @@
-// models/Product.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config');
 const Category = require('./Category');
@@ -25,11 +24,11 @@ const Product = sequelize.define('Product', {
   },
   extra_image: {
     type: DataTypes.JSON,
-    allowNull: true // Allow extra images to be optional
+    allowNull: true 
   },
   extra_video: {
     type: DataTypes.JSON,
-    allowNull: true // Allow extra videos to be optional
+    allowNull: true 
   },
   price: {
     type: DataTypes.FLOAT,
@@ -41,51 +40,49 @@ const Product = sequelize.define('Product', {
   },
   stock_eta: {
     type: DataTypes.STRING,
-    allowNull: true // Allow stock ETA to be optional
+    allowNull: true 
   },
   features: {
     type: DataTypes.STRING,
     allowNull: false
   },
   technical_details: {
-    type: DataTypes.JSON, // You can use JSONB for storing technical details
-    allowNull: true // Allow technical details to be optional
+    type: DataTypes.JSON, 
+    allowNull: true 
   },
   marketId: {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: Market, // Reference the Market model object directly
-      key: 'id' // Name of the referenced column in the Market model
+      model: Market, 
+      key: 'id' 
     }
   },
   categoryId: {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: Category, // Reference the Category model object directly
-      key: 'id' // Name of the referenced column in the Category model
+      model: Category, 
+      key: 'id' 
     }
   },
   subcategoryId: {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: Subcategory, // Reference the Subcategory model object directly
-      key: 'id' // Name of the referenced column in the Subcategory model
+      model: Subcategory, 
+      key: 'id' 
     }
   },
   subSubcategoryId: {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: SubSubcategory, // Reference the SubSubcategory model object directly
-      key: 'id' // Name of the referenced column in the SubSubcategory model
+      model: SubSubcategory, 
+      key: 'id' 
     }
   }
 });
-
-// Define associations
 
 
 module.exports = Product;
