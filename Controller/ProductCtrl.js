@@ -210,6 +210,30 @@ const getAllMarkets = asyncHandler(async (req, res) => {
     }
 });
 
+const getCategoryById = asyncHandler(async (req, res) => {
+  try {
+      const categoryId = req.params.id; 
+      const category = await Category.findByPk(categoryId, {
+          include: [
+              {
+                  model: Market,
+                  attributes: ['id', 'name', 'image']
+              }
+          ]
+      });
+
+      if (!category) {
+          return res.status(404).json({ message: 'Category not found' });
+      }
+
+      res.json(category);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
   const createSubcategory = asyncHandler(async (req, res) => {
     try {
       const { categoryId, name } = req.body;
@@ -237,6 +261,30 @@ const getAllMarkets = asyncHandler(async (req, res) => {
     res.status(500).json({message : e.message})
   }
   });
+
+  const getSubcategoryById = asyncHandler(async (req, res) => {
+    try {
+        const subcategoryId = req.params.id; // Assuming the ID is passed as a parameter in the request URL
+        const subcategory = await Subcategory.findByPk(subcategoryId, {
+            include: [
+                {
+                    model: Category,
+                    attributes: ['id', 'name']
+                }
+            ]
+        });
+
+        if (!subcategory) {
+            return res.status(404).json({ message: 'Subcategory not found' });
+        }
+
+        res.json(subcategory);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 
 
@@ -267,6 +315,30 @@ const getAllMarkets = asyncHandler(async (req, res) => {
       res.status(500).json({ success: false, error: error.message });
     }
   });
+
+  const getSubSubcategoryById = asyncHandler(async (req, res) => {
+    try {
+        const subSubcategoryId = req.params.id; 
+        const subSubcategory = await SubSubcategory.findByPk(subSubcategoryId, {
+            include: [
+                {
+                    model: Subcategory,
+                    attributes: ['id', 'name']
+                }
+            ]
+        });
+
+        if (!subSubcategory) {
+            return res.status(404).json({ message: 'Subsubcategory not found' });
+        }
+
+        res.json(subSubcategory);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 
   const getMarketAndCategories = asyncHandler(async (req, res) => {
@@ -318,9 +390,12 @@ module.exports = {
   deletedMarkets,
   createCategory ,
   getCategories ,
+  getCategoryById,
   createSubcategory, 
   getSubcategories ,
+  getSubcategoryById ,
   createSubSubcategory,
   getSubSubcategories ,
+  getSubSubcategoryById ,
   getMarketAndCategories
  };
