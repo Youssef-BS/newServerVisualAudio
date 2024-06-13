@@ -40,7 +40,25 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.findAll();
+  const products = await Product.findAll({
+    include : [
+      {model : Market , 
+        Market 
+      } , 
+      {
+        model : Category,
+        Category
+      } , 
+      {
+        model : Subcategory,
+        Subcategory
+      } , 
+      {
+        model : SubSubcategory,
+        SubSubcategory
+      }
+    ]
+  });
   res.json(products);
 });
 
@@ -212,24 +230,26 @@ const getAllMarkets = asyncHandler(async (req, res) => {
 
 const getCategoryById = asyncHandler(async (req, res) => {
   try {
-      const categoryId = req.params.id; 
-      const category = await Category.findByPk(categoryId, {
-          include: [
-              {
-                  model: Market,
-                  attributes: ['id', 'name', 'image']
-              }
-          ]
-      });
+    const marketId = req.params.id; 
 
-      if (!category) {
-          return res.status(404).json({ message: 'Category not found' });
-      }
+    const categories = await Category.findAll({
+      where: { MarketId: marketId },
+      include: [
+        {
+          model: Market,
+          attributes: ['id', 'name', 'image'],
+        },
+      ],
+    });
 
-      res.json(category);
+    if (categories.length === 0) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    res.json(categories);
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ message: 'Internal server error' });
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
