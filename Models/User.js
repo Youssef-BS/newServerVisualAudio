@@ -80,7 +80,11 @@ const User = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
-    }
+    } ,
+    verificationCode: {
+      type: DataTypes.STRING(6),
+      allowNull: true
+  },
   }, {
   });
   
