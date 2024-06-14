@@ -46,11 +46,16 @@ async function registerUser(req, res) {
 
 async function sendVerificationEmail(email, verificationCode) {
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.gmail.com', 
+        port: 465, 
+        secure: true, 
         auth: {
             user: 'test2104e@gmail.com',
-            pass: 'aazzee12'
-        }
+            pass: 'aazzee12' 
+        },
+        tls: {
+            rejectUnauthorized: false,
+        },
     });
     
     const mailOptions = {
@@ -60,7 +65,12 @@ async function sendVerificationEmail(email, verificationCode) {
         text: `Please use the following code to verify your email: ${verificationCode}`
     };
 
-    await transporter.sendMail(mailOptions);
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Verification email sent to:', email);
+    } catch (error) {
+        console.error('Error sending verification email:', error);
+    }
 }
 
 async function login(req, res) {
@@ -96,9 +106,23 @@ async function verifyEmail(req, res) {
         user.isVerified = true;
         user.verificationCode = null; 
         await user.save();
-        res.status(200).json({ message: 'Email verified successfully' });
+        res.status(200).json({ message: 'Email verified successfully , Now admin Verified Your Account you Have request an Email' });
     } catch (error) {
         console.error('Error verifying email:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+async function AcceptAcountRequest (req , res) {
+    const {id} = req.params ; 
+    try {
+     const user = await User.findOne({where: {id: id}}) ; 
+     if(!user) 
+        return res.status(404).json({ message: 'User not found' });
+     user.acceptRequest = true ;
+     await user.save() ;
+     res.json({ message: 'User accepted'} ) ;
+    } catch(error) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
@@ -106,5 +130,6 @@ async function verifyEmail(req, res) {
 module.exports = {
     registerUser,
     login,
-    verifyEmail 
+    verifyEmail , 
+    AcceptAcountRequest,
 };
