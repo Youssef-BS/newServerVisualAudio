@@ -95,7 +95,7 @@ async function login(req, res) {
     }
 }
 
-// New function to verify the code
+
 async function verifyEmail(req, res) {
     const { email, verificationCode } = req.body;
     try {
@@ -113,7 +113,7 @@ async function verifyEmail(req, res) {
     }
 }
 
-async function AcceptAcountRequest (req , res) {
+ const acceptAcountRequest = async (req , res )=> {
     const {id} = req.params ; 
     try {
      const user = await User.findOne({where: {id: id}}) ; 
@@ -127,9 +127,20 @@ async function AcceptAcountRequest (req , res) {
     }
 }
 
+
+const refuseUser = async (req , res) => {
+    const {id} = req.params ;
+    const user = await User.findOne({where : { id : id}}) ; 
+    if(!user)
+        return res.status(404).json({ message: 'User not found' });
+    await user.destroy() ; 
+    res.status(200).json({ message: 'User deleted' }) ;
+}
+
 module.exports = {
     registerUser,
     login,
     verifyEmail , 
-    AcceptAcountRequest,
+    acceptAcountRequest,
+    refuseUser,
 };

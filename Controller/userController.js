@@ -104,10 +104,36 @@ res.status(200).json(user);
 }
 } 
 
+const changePassword = async (req, res) => {
+    const idUser = req.params.userId;
+    const { passwordCurrent, passwordNew } = req.body;
+  
+    try {
+      const user = await User.findOne({ where: { id: idUser } });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const isMatch = await bcrypt.compare(passwordCurrent, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Current password is incorrect' });
+      }
+  
+      const hashedPassword = await bcrypt.hash(passwordNew, 10);
+      await user.update({ password: hashedPassword });
+  
+      res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+      console.error('Error changing password:', error);
+      res.status(500).json({ error: error.message });
+    }
+  };
+
 module.exports = {
     getAllUsers , 
     createUser , 
     deleteUser , 
     updateUser , 
-    getUser
+    getUser ,
+    changePassword
 }
